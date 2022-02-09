@@ -1,20 +1,23 @@
-import { Category } from "../model/Category"
+import { Category } from "../../model/Category"
+import { ICategoriesRepository, ICreateCategoryDTO } from "../ICategoriesRepository";
 
-//DTO => Data Transfer Object
 
-interface ICreateCategoryDTO {
-    name: string;
-    description: string
-}
+class CategoriesRepository implements ICategoriesRepository {
 
-class CategoriesRepository {
+    private categories: Category[]
 
-    private categories: Category[] = []
+    private static INSTANCE: CategoriesRepository
 
-    constructor() {
+    private constructor() {
         this.categories = []
     }
 
+    public static getInstance(): CategoriesRepository {
+        if (!CategoriesRepository.INSTANCE) {
+            CategoriesRepository.INSTANCE = new CategoriesRepository();
+        }
+        return CategoriesRepository.INSTANCE
+    }
 
     create({ name, description }: ICreateCategoryDTO): void {
         const category = new Category();
@@ -36,7 +39,6 @@ class CategoriesRepository {
         const category = this.categories.find(category => category.name === name)
         return category
     }
-
 }
 
 export { CategoriesRepository }
